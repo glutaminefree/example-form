@@ -63,7 +63,7 @@
     </b-field>
     <b-field class="form__submit">
       <b-button
-        :class="{'is-loading': submitInProgress, 'is-disabled': submitDisabled}"
+        :class="{'is-loading': submitInProgress}"
         type="is-primary"
         size="is-medium"
         @click="sendForm"
@@ -86,7 +86,6 @@ export default {
 
       submitTriggered: false,
       submitInProgress: false,
-      submitDisabled: false,
     };
   },
   computed: {
@@ -133,10 +132,6 @@ export default {
   },
   methods: {
     sendForm() {
-      if (this.submitDisabled) {
-        return false;
-      }
-
       this.submitInProgress = true;
 
       this.$validator.validateAll().then((result) => {
@@ -150,9 +145,8 @@ export default {
           });
 
           setTimeout(() => {
-            this.submitInProgress = false;
-            this.submitDisabled = true;
-          }, 800);
+            location.reload();
+          }, 1600);
         } else {
           this.$buefy.toast.open({
             message: 'Form is not valid! Please check the fields.',
