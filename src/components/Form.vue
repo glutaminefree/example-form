@@ -1,5 +1,5 @@
 <template>
-  <form class="form">
+  <form class="form" data-test="form">
     <b-field
       label="Full name"
       :type="fieldsTypes.fullName"
@@ -13,6 +13,7 @@
         icon="user"
         icon-pack="fa"
         size="is-medium"
+        data-test="input"
       ></b-input>
     </b-field>
     <b-field
@@ -28,6 +29,7 @@
         icon="envelope"
         icon-pack="fa"
         size="is-medium"
+        data-test="input"
       ></b-input>
     </b-field>
     <b-field
@@ -44,6 +46,7 @@
         icon="phone-alt"
         icon-pack="fa"
         size="is-medium"
+        data-test="input"
       ></b-input>
     </b-field>
     <b-field
@@ -59,15 +62,22 @@
         icon="map-marked-alt"
         icon-pack="fa"
         size="is-medium"
+        data-test="input"
       ></b-input>
     </b-field>
     <b-field class="form__submit">
       <b-button
+        class="submit-button"
         :class="{'is-loading': submitInProgress}"
-        type="is-primary"
+        :disabled="submitSuccess"
+        :type="!submitSuccess ? 'is-primary' : 'is-success'"
         size="is-medium"
         @click="sendForm"
-      >Submit</b-button>
+        data-test="submit"
+      >
+        <span v-if="!submitSuccess">Submit</span>
+        <span v-else>Saved!</span>
+      </b-button>
     </b-field>
   </form>
 </template>
@@ -86,6 +96,7 @@ export default {
 
       submitTriggered: false,
       submitInProgress: false,
+      submitSuccess: false,
     };
   },
   computed: {
@@ -138,25 +149,18 @@ export default {
         this.submitTriggered = true;
 
         if (result) {
-          this.$buefy.toast.open({
-            message: 'Form is valid!',
-            type: 'is-success',
-            position: 'is-bottom',
-          });
-
           setTimeout(() => {
-            location.reload();
+            this.submitSuccess = true;
+            this.submitInProgress = false;
           }, 1600);
         } else {
           this.$buefy.toast.open({
             message: 'Form is not valid! Please check the fields.',
             type: 'is-danger',
-            position: 'is-bottom'
-          })
+            position: 'is-bottom',
+          });
 
-          setTimeout(() => {
-            this.submitInProgress = false;
-          }, 800);
+          this.submitInProgress = false;
         }
       });
 
