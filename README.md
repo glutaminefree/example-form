@@ -1,4 +1,6 @@
-# form
+# Form Example
+
+Project contains form with masking and validation on VeeValidate + Unit testing on Jest
 
 ## Project setup
 ```
